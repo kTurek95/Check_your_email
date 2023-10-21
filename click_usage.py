@@ -19,6 +19,22 @@ def mail_connection(config, client):
     for configuration in config.get_info_from_file():
         print(f'{i}. {configuration}')
         i += 1
-    user_config = int(input('Wybierz konfigurację: '))
+    user_config = int(input('Choose configuration: '))
     imap_server = client.connect_with_server(user_config)
     client.search_messages(imap_server)
+
+
+def handle_user_choice(user_choice, config, client):
+    """
+    Handles the user's choice for various email-related operations.
+    """
+    if user_choice == 1:
+        config.get_mail_conf()
+        config.add_conf_to_file()
+    elif user_choice == 2:
+        print(config.get_info_from_file())
+    elif user_choice == 3:
+        mail_connection(config, client)
+    elif user_choice == 4:
+        return False
+    return True
