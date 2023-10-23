@@ -65,3 +65,20 @@ class Configuration:
             config_data = {'imap_server': imap, 'login': login, 'password': password}
             yaml.safe_dump(config_data, file, default_style="'")
             file.write('\n')
+
+    @staticmethod
+    def get_info_from_file():
+        """
+        Retrieves all configurations from 'conf.yaml' file.
+
+        This method reads 'conf.yaml' file and extracts all configurations stored in it.
+        Each configuration is added to a list, which is then returned.
+
+        Returns:
+            list: A list of dictionaries containing configuration data.
+        """
+        config_data_list = []
+        with open('conf.yaml', 'r') as file:
+            for config_data in yaml.safe_load_all(file):
+                config_data_list.append(config_data)
+        return config_data_list
