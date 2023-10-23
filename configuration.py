@@ -45,3 +45,23 @@ class Configuration:
                 if config_data is not None and config_data.get('login') == new_login:
                     return True
         return False
+
+    def add_conf_to_file(self):
+        """
+        Adds a configuration to 'conf.yaml' file.
+
+        This method appends IMAP server, login, and password information to the 'conf.yaml' file.
+        If a configuration for the given login already exists in the file, a message is printed and no
+        changes are made. Otherwise, the configuration is added to the end of the file in YAML format.
+        """
+        imap, login, password = self.imap, self.login, self.password
+
+        if self.is_config_present(login):
+            print(f"Configuration for {login} already exists.")
+            return
+
+        with open('conf.yaml', 'a') as file:
+            file.write('---\n')
+            config_data = {'imap_server': imap, 'login': login, 'password': password}
+            yaml.safe_dump(config_data, file, default_style="'")
+            file.write('\n')
