@@ -56,3 +56,25 @@ class EmailClient:
         except imaplib.IMAP4.error as error:
             print(f'An IMAP4 error occurred: {error}')
             return False
+
+    @staticmethod
+    def search_by_sender(imap_server):
+        """
+        Allows the user to search for emails based on sender-related criteria on the given IMAP server.
+
+        Parameters:
+        - imap_server (object): The IMAP server connection object.
+
+        Note:
+        - Currently supported search criteria are 'all', 'seen', and 'unseen'.
+        """
+        print('all, seen, unseen')
+        user_option = input('Choose searching options: ')
+        status, messages = imap_server.search(None, user_option)
+        message_ids = messages[0].split()
+        for message_id in message_ids:
+            status, msg_data = imap_server.fetch(message_id, '(BODY[HEADER.FIELDS (FROM SUBJECT)])')
+            raw_email = msg_data[0][1]
+            msg = email.message_from_bytes(raw_email)
+            from_address = msg['From']
+            print(f'Sender: {from_address}')
