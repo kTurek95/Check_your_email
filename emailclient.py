@@ -69,7 +69,7 @@ class EmailClient:
         - Currently supported search criteria are 'all', 'seen', and 'unseen'.
         """
         print('all, seen, unseen')
-        user_option = input('Choose searching options: ')
+        user_option = input('Choose a search option: ')
         status, messages = imap_server.search(None, user_option)
         message_ids = messages[0].split()
         for message_id in message_ids:
@@ -78,3 +78,23 @@ class EmailClient:
             msg = email.message_from_bytes(raw_email)
             from_address = msg['From']
             print(f'Sender: {from_address}')
+
+    @staticmethod
+    def search_by_subject(imap_server):
+        """
+       Allows the user to search for emails based on given criteria and displays the subject of matched emails
+       on the provided IMAP server.
+
+       Parameters:
+       - imap_server (object): The IMAP server connection object.
+        """
+        print('all, seen, unseen')
+        user_option = input('Choose a search option.: ')
+        status, messages = imap_server.search(None, user_option)
+        message_ids = messages[0].split()
+        for message_id in message_ids:
+            status, msg_data = imap_server.fetch(message_id, '(BODY[HEADER.FIELDS (FROM SUBJECT)])')
+            raw_email = msg_data[0][1]
+            msg = email.message_from_bytes(raw_email)
+            subject = msg['Subject']
+            print('Subject: ', subject)
