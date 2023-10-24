@@ -1,3 +1,4 @@
+import email
 import imaplib
 from database import Database
 
@@ -35,3 +36,23 @@ class EmailClient:
         imap_server = imaplib.IMAP4_SSL(host=config['imap_server'])
         imap_server.login(config['login'], config['password'])
         return imap_server
+
+    @staticmethod
+    def select_mailbox(imap_server):
+        """
+        Allows the user to select a mailbox (e.g. inbox, sent, drafts) and attempts to select it on the given IMAP server.
+
+        Parameters:
+        - imap_server (object): The IMAP server connection object.
+
+        Returns:
+        - bool: True if the mailbox selection was successful, False otherwise.
+        """
+        print('inbox, sent, drafts, trash, spam')
+        mail_option = input('Choose which mailbox you want to check: ')
+        try:
+            imap_server.select(mail_option)
+            return True
+        except imaplib.IMAP4.error as error:
+            print(f'An IMAP4 error occurred: {error}')
+            return False
