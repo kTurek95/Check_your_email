@@ -1,4 +1,7 @@
+import email
+from email.utils import parsedate_to_datetime
 import sqlite3
+from datetime import datetime
 
 
 class Database:
@@ -35,4 +38,22 @@ class Database:
                             "login_date TEXT,"
                             "email_id INTEGER,"
                             "FOREIGN KEY(email_id) REFERENCES emails(id))")
+        self.connection.commit()
+
+    def create_emails_table(self):
+        """
+        Creates the `emails` table in the SQLite database if it doesn't exist.
+
+        The `emails` table consists of the following columns:
+        - id' - an auto-incremented primary key.
+        - 'email' - a column to store email addresses as text.
+
+        Also enables foreign key support in SQLite by setting "PRAGMA foreign_keys = ON;".
+        """
+        self.connection = sqlite3.connect(self.file_name)
+        self.cursor = self.connection.cursor()
+        self.cursor.execute("PRAGMA foreign_keys = ON;")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS emails("
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                            "email TEXT)")
         self.connection.commit()
