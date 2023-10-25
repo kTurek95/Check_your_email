@@ -57,3 +57,20 @@ class Database:
                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                             "email TEXT)")
         self.connection.commit()
+
+    def insert_into_emails_table(self, value, column_name):
+        """
+        Insert a new record into the 'emails' table in the SQLite database.
+
+        Args:
+        - value (str): The value to be inserted into the specified column.
+        - column_name (str): The name of the column where the value should be inserted.
+
+        This method checks if the email already exists in the database using the
+        'email_exists' method. If the email does not exist, it inserts the new email
+        into the 'emails' table. Otherwise, it does nothing.
+        """
+        if not self.email_exists(value):
+            query = f"INSERT INTO emails ({column_name}) VALUES (?)"
+            self.cursor.execute(query, value)
+            self.connection.commit()
