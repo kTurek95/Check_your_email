@@ -98,3 +98,27 @@ class EmailClient:
             msg = email.message_from_bytes(raw_email)
             subject = msg['Subject']
             print('Subject: ', subject)
+
+    def search_messages(self, imap_server):
+        """
+        Allows the user to search for messages in a selected mailbox based on various criteria,
+        including by sender and subject.
+
+        The function first prompts the user to select a mailbox. If the mailbox selection
+        is successful, the user can then choose from a list of search criteria. Depending
+        on the choice, the function delegates the search to dedicated methods or directly
+        performs the search on the provided IMAP server.
+
+        Parameters:
+        - imap_server (object): The IMAP server connection object.
+        """
+        if self.select_mailbox(imap_server):
+            print('all, unseen, seen, email sender, email subject ')
+            search_options = input('Wybierz opcje wyszukiwania: ')
+            if search_options == 'email sender':
+                self.search_by_sender(imap_server)
+            elif search_options == 'email subject':
+                self.search_by_subject(imap_server)
+            else:
+                status, messages = imap_server.search(None, search_options)
+                print(messages)
