@@ -74,3 +74,22 @@ class Database:
             query = f"INSERT INTO emails ({column_name}) VALUES (?)"
             self.cursor.execute(query, value)
             self.connection.commit()
+
+    def insert_into_login_table(self, login_date, email_id):
+        """
+        Inserts login information into the 'login_information' table.
+
+        Args:
+            login_date (str): The date of the login attempt.
+            email_id (str): The email ID associated with the login attempt.
+
+        Raises:
+            sqlite3.Error: If there is an error while inserting data into the database.
+        """
+        if email_id:
+            try:
+                query = "INSERT INTO login_information (login_date, email_id) VALUES (?, ?)"
+                self.cursor.execute(query, (login_date, email_id))
+                self.connection.commit()
+            except sqlite3.Error as e:
+                print(f"Error inserting into login_information: {e}")
