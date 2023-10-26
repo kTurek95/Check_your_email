@@ -93,3 +93,15 @@ class Database:
                 self.connection.commit()
             except sqlite3.Error as e:
                 print(f"Error inserting into login_information: {e}")
+
+    def get_info_from_table(self):
+        """
+        Retrieve the most recent login date from the 'login_information' table.
+
+        Returns:
+            tuple: A single tuple containing the most recent login date or None if the table is empty.
+        """
+        query = f"SELECT login_date FROM login_information ORDER BY login_date DESC LIMIT 1"
+        self.cursor.execute(query)
+        row = self.cursor.fetchone()
+        return row
