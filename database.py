@@ -105,3 +105,39 @@ class Database:
         self.cursor.execute(query)
         row = self.cursor.fetchone()
         return row
+
+    def get_new_emails_since_last_login(self, client):
+        """
+        Retrieve new emails from the client's inbox since the user's last login.
+
+        This function first fetches the last login date from the database.
+        It then establishes a connection to the email server, selects the inbox,
+        and searches for emails with a date stamp after the last login.
+
+        Args:
+            client (obj): A client object used to connect with the email server.
+
+        Returns:
+            list: A list of new email messages received since the last login.
+        """
+        data_str = self.get_info_from_table()[0]
+        data_dt = datetime.strptime(data_str, '%Y-%m-%d %H:%M:%S').astimezone()
+        search_criteria = f"(SINCE {data_dt.strftime('%d-%b-%Y')})"
+
+        user_config = int(input('Choose configuration: '))
+        imap_server = client.connect_with_server(user_config)
+        imap_server.select('INBOX')
+
+        typ, msg_nums = imap_server.search(None, search_criteria)
+        new_msgs = []
+
+        for num in msg_nums[0].split():
+            typ, msg_data = imap_server.fetch(num, '(RFC822)')
+            email_msg = email.message_from_bytes(msg_data[0][1])
+            email_date = email_msg['Date']
+            email_date_dt = parsedate_to_datetime(email_date).astimezone()
+
+            if email_date_dt > data_dt:
+                new_msgs.append(email_msg)
+
+        return new_msgs
