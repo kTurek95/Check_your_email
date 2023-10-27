@@ -156,3 +156,17 @@ class Database:
         self.cursor.execute(query, (email_address,))
         row = self.cursor.fetchone()
         return row[0]
+
+    def email_exists(self, email):
+        """
+        Checks if an email exists in the 'emails' database table.
+
+        Args:
+            email (str): The email address to check for existence.
+
+        Returns:
+            bool: True if the email exists in the database, False otherwise.
+        """
+        query = "SELECT 1 FROM emails WHERE email = ?"
+        self.cursor.execute(query, email)
+        return self.cursor.fetchone() is not None
