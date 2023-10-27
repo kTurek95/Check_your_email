@@ -141,3 +141,18 @@ class Database:
                 new_msgs.append(email_msg)
 
         return new_msgs
+
+    def get_email_id(self, email_address):
+        """
+       Retrieve the ID of an email address from the database, if it exists.
+
+       Args:
+           email_address (str): The email address for which to find the ID.
+
+       Returns:
+           int or None: The ID of the email address or None if no matching record exists.
+       """
+        query = "SELECT id FROM emails WHERE email = ?"
+        self.cursor.execute(query, (email_address,))
+        row = self.cursor.fetchone()
+        return row[0]
