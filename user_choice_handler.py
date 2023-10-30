@@ -75,13 +75,16 @@ def handle_user_choice(user_choice, config, client):
             for login_info in configurations:
                 i += 1
                 print(f'{i}. {login_info["login"]}')
-            new_msg = data.get_new_emails_since_last_login(client)
-            if len(new_msg) > 0:
-                for msg in new_msg:
-                    msg_info = f' From: {msg["FROM"]}, Subject: {msg["SUBJECT"]}'
-                    print(msg_info)
-            else:
-                print('You have no new messages')
+            try:
+                new_msg = data.get_new_emails_since_last_login(client)
+                if len(new_msg) > 0:
+                    for msg in new_msg:
+                        msg_info = f' From: {msg["FROM"]}, Subject: {msg["SUBJECT"]}'
+                        print(msg_info)
+                else:
+                    print('You have no new messages')
+            except TypeError:
+                print("You don't have any data in the database")
     elif user_choice == 5:
         return False
     return True
