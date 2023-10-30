@@ -43,7 +43,7 @@ def mail_connection(config, client):
             data.insert_into_login_table(login_date=formatted_time, email_id=email_id)
             client.search_messages(imap_server)
     except Exception as error:
-        print(f"Błąd podczas łączenia z serwerem: {error}")
+        print(f'Error while connecting to the server: {error}')
 
 
 def handle_user_choice(user_choice, config, client):
@@ -58,21 +58,30 @@ def handle_user_choice(user_choice, config, client):
         config.get_mail_conf()
         config.add_conf_to_file()
     elif user_choice == 2:
-        print(configurations)
-    elif user_choice == 3:
-        mail_connection(config, client)
-    elif user_choice == 4:
-        i = 0
-        for login_info in configurations:
-            i += 1
-            print(f'{i}. {login_info["login"]}')
-        new_msg = data.get_new_emails_since_last_login(client)
-        if len(new_msg) > 0:
-            for msg in new_msg:
-                msg_info = f' From: {msg["FROM"]}, Subject: {msg["SUBJECT"]}'
-                print(msg_info)
+        if len(configurations) == 0:
+            print("You haven't added any configurations")
         else:
-            print('You have no new messages')
+            print(configurations)
+    elif user_choice == 3:
+        if len(configurations) == 0:
+            print("You haven't added any configurations")
+        else:
+            mail_connection(config, client)
+    elif user_choice == 4:
+        if len(configurations) == 0:
+            print("You haven't added any configurations")
+        else:
+            i = 0
+            for login_info in configurations:
+                i += 1
+                print(f'{i}. {login_info["login"]}')
+            new_msg = data.get_new_emails_since_last_login(client)
+            if len(new_msg) > 0:
+                for msg in new_msg:
+                    msg_info = f' From: {msg["FROM"]}, Subject: {msg["SUBJECT"]}'
+                    print(msg_info)
+            else:
+                print('You have no new messages')
     elif user_choice == 5:
         return False
     return True
