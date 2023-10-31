@@ -1,3 +1,4 @@
+import click
 import yaml
 
 
@@ -25,7 +26,7 @@ class Configuration:
         if imap is None or login is None or password is None:
             self.imap = input('Enter the IMAP for your mail: ')
             self.login = input('Enter your login: ')
-            self.password = input('Enter your password: ')
+            self.password = click.prompt('Enter your password', hide_input=True)
 
     @staticmethod
     def is_config_present(new_login):
