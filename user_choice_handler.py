@@ -57,6 +57,8 @@ def handle_user_choice(user_choice, config, client):
     if user_choice == 1:
         config.get_mail_conf()
         config.add_conf_to_file()
+        print('Configuration was added')
+        quit()
     elif user_choice == 2:
         if len(configurations) == 0:
             print("You haven't added any configurations")
