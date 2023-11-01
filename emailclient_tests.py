@@ -34,6 +34,15 @@ class TestEmailClient(unittest.TestCase):
             result = self.client.select_mailbox(mock_server)
             self.assertTrue(result)
 
+    @patch("imaplib.IMAP4_SSL")
+    def test_search_by_sender(self, MockImap):
+        mock_server = MockImap()
+        mock_server.select.return_value = "OK"
+
+        with patch('builtins.input', return_value='all'):
+            result = self.client.select_mailbox(mock_server)
+            self.assertTrue(result)
+
 
 if __name__ == "__main__":
     unittest.main()
